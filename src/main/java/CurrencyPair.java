@@ -6,25 +6,26 @@ public class CurrencyPair {
     private BigDecimal conversionFactor;
 
     public CurrencyPair(double spread, double conversionFactor) {
-        // spread jest wartoscia procentowa
-        // conversion factor jest liczba
+        // spread i conversion factor muszą być wartościami dodatnimi
+        if (conversionFactor < 0) {
+            System.exit(1);
+        }
+        if (spread < 0) {
+            System.exit(1);
+        }
         this.spread = BigDecimal.valueOf(spread);
         this.conversionFactor = BigDecimal.valueOf(conversionFactor);
     }
 
     public double sell(double inputAmount) {
+        // zwraca kwote w euro odpowiadajaca kwocie w zl na wejsciu
+        if (inputAmount < 0) {
+            System.exit(2);
+        }
         BigDecimal amount = BigDecimal.valueOf(inputAmount);
-        BigDecimal sellValue = amount.multiply(conversionFactor).subtract(spread.divide(BigDecimal.valueOf(100)).multiply(amount));
+        BigDecimal sellValue = amount.multiply(conversionFactor).subtract(spread.multiply(amount));
         return sellValue.doubleValue();
     }
-
-    public double buy(double inputAmount) {
-        BigDecimal amount = BigDecimal.valueOf(inputAmount);
-        BigDecimal purchaseValue = amount.divide(conversionFactor).add(spread.divide(BigDecimal.valueOf(100)).multiply(amount));
-        return purchaseValue.doubleValue();
-    }
-
-
 
     @Override
     public String toString() {
